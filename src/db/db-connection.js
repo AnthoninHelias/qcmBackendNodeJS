@@ -4,7 +4,10 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 
-const client = new Client(process.env.DATABASE_URL)
+const client = new Client({connectionString: process.env.DATABASE_URL,
+    ssl: {
+    rejectUnauthorized: false
+}})
 
 client.connect()
 console.log("Connecté")
