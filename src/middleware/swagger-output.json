@@ -162,6 +162,30 @@
         "tags": [
           "Questions"]
       }
+    },
+    "/reponse/{id}": {
+      "get": {
+        "summary": "Renvoie les réponses par l'id de la question",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "tags": [
+          "Réponses"]
+      }
     }
   }
 }
