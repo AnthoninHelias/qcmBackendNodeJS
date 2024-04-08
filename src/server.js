@@ -21,7 +21,7 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use('/questions', questionRoute)
 app.use('/reponse', responseRoute)
 
-app.listen(8000, () => {    
+app.listen(process.env.PORT, () => {
     console.log('Server is running on port http://localhost:8000/doc')
 })
 module.exports = app;
