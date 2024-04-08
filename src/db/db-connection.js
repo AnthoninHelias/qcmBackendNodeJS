@@ -4,13 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 
-const client = new Client({
-    host: process.env.HOST,
-    database: process.env.DB_DATABASE,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    port: process.env.PORT,
-})
+const client = new Client(process.env.DB_URL)
 
 client.connect()
 console.log("Connecté")
