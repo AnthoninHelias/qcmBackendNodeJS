@@ -11,7 +11,7 @@ const responseRoute = require('../src/routes/reponses.route.js')
 
 dotenv.config();
 
-app.use(cors({origin: 'http://localhost:3000'}));
+app.use(cors({origin: '*'}));
 
 app.use(express.json()); //format json
 app.set('json spaces', 2);
