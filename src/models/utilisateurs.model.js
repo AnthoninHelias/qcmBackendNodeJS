@@ -13,7 +13,7 @@ const UtilisateurConstructor = function(utilisateur) {
 getUtilisateurById = async (id, mot_de_passe, result_bdd_request) => {
     try {
         database.query(
-            "SELECT * FROM utilisateurs WHERE id = $1",
+            "SELECT * FROM questionnaire.utilisateurs WHERE id = $1",
             [id],
             async (error, response) => {
                 if (error) {
@@ -45,7 +45,7 @@ createUtilisateur = async (utilisateur, result_bdd_request) => {
         const hashedPassword = await bcrypt.hash(mot_de_passe, SALT_ROUNDS);
 
         database.query(
-            "INSERT INTO utilisateurs (mot_de_passe, pseudo) VALUES ($1, $2) RETURNING id, pseudo",
+            "INSERT INTO questionnaire.utilisateurs (mot_de_passe, pseudo) VALUES ($1, $2) RETURNING id, pseudo",
             [hashedPassword, pseudo || null],
             (error, response) => {
                 if (error) {
@@ -70,10 +70,10 @@ updateUtilisateurById = async (id, utilisateur, result_bdd_request) => {
 
         if (mot_de_passe) {
             const hashedPassword = await bcrypt.hash(mot_de_passe, SALT_ROUNDS);
-            query = "UPDATE utilisateurs SET mot_de_passe = $1, pseudo = $2 WHERE id = $3 RETURNING id, pseudo";
+            query = "UPDATE questionnaire.utilisateurs SET mot_de_passe = $1, pseudo = $2 WHERE id = $3 RETURNING id, pseudo";
             params = [hashedPassword, pseudo || null, id];
         } else {
-            query = "UPDATE utilisateurs SET pseudo = $1 WHERE id = $2 RETURNING id, pseudo";
+            query = "UPDATE questionnaire.utilisateurs SET pseudo = $1 WHERE id = $2 RETURNING id, pseudo";
             params = [pseudo || null, id];
         }
 
@@ -93,7 +93,7 @@ updateUtilisateurById = async (id, utilisateur, result_bdd_request) => {
 loginByPseudo = async (pseudo, mot_de_passe, result_bdd_request) => {
     try {
         database.query(
-            "SELECT * FROM utilisateurs WHERE pseudo = $1",
+            "SELECT * FROM questionnaire.utilisateurs WHERE pseudo = $1",
             [pseudo],
             async (error, response) => {
                 if (error) {
@@ -118,7 +118,7 @@ loginByPseudo = async (pseudo, mot_de_passe, result_bdd_request) => {
 loginUtilisateur = async (pseudo, mot_de_passe, result_bdd_request) => {
     try {
         database.query(
-            "SELECT * FROM utilisateurs WHERE pseudo = $1",
+            "SELECT * FROM questionnaire.utilisateurs WHERE pseudo = $1",
             [pseudo],
             async (error, response) => {
                 if (error) {
@@ -142,7 +142,7 @@ loginUtilisateur = async (pseudo, mot_de_passe, result_bdd_request) => {
 // Supprimer un utilisateur
 deleteUtilisateurById = (id, result_bdd_request) => {
     database.query(
-        "DELETE FROM utilisateurs WHERE id = $1 RETURNING id, pseudo",
+        "DELETE FROM questionnaire.utilisateurs WHERE id = $1 RETURNING id, pseudo",
         [id],
         (error, response) => {
             if (error) {
