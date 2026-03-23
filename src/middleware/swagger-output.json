@@ -367,14 +367,14 @@
                 "type": "object",
                 "required": [
                   "pseudo",
-                  "motdepasse"
+                  "mot_de_passe"
                 ],
                 "properties": {
                   "pseudo": {
                     "type": "string",
                     "example": "johndoe"
                   },
-                  "motdepasse": {
+                  "mot_de_passe": {
                     "type": "string",
                     "example": "motdepasse123"
                   }
@@ -439,7 +439,7 @@
                     "type": "string",
                     "example": "newpseudo"
                   },
-                  "motdepasse": {
+                  "mot_de_passe": {
                     "type": "string",
                     "example": "nouveaumotdepasse"
                   }
@@ -509,14 +509,14 @@
                 "type": "object",
                 "required": [
                   "pseudo",
-                  "motdepasse"
+                  "mot_de_passe"
                 ],
                 "properties": {
                   "pseudo": {
                     "type": "string",
                     "example": "johndoe"
                   },
-                  "motdepasse": {
+                  "mot_de_passe": {
                     "type": "string",
                     "example": "motdepasse123"
                   }

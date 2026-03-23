@@ -32,10 +32,10 @@ router.post('/create', (req, res) => {
                'application/json': {
                    schema: {
                        type: 'object',
-                       required: ['pseudo', 'motdepasse'],
+                       required: ['pseudo', 'mot_de_passe'],
                        properties: {
                            pseudo: { type: 'string', example: 'johndoe' },
-                           motdepasse: { type: 'string', example: 'motdepasse123' }
+                           mot_de_passe: { type: 'string', example: 'motdepasse123' }
                        }
                    }
                }
@@ -60,7 +60,7 @@ router.put('/update/:id', (req, res) => {
                        type: 'object',
                        properties: {
                            pseudo: { type: 'string', example: 'newpseudo' },
-                           motdepasse: { type: 'string', example: 'nouveaumotdepasse' }
+                           mot_de_passe: { type: 'string', example: 'nouveaumotdepasse' }
                        }
                    }
                }
@@ -92,10 +92,10 @@ router.post('/login', (req, res) => {
                'application/json': {
                    schema: {
                        type: 'object',
-                       required: ['pseudo', 'motdepasse'],
+                       required: ['pseudo', 'mot_de_passe'],
                        properties: {
                            pseudo: { type: 'string', example: 'johndoe' },
-                           motdepasse: { type: 'string', example: 'motdepasse123' }
+                           mot_de_passe: { type: 'string', example: 'motdepasse123' }
                        }
                    }
                }
