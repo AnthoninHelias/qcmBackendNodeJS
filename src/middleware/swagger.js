@@ -5,8 +5,8 @@ const doc = {
     title: 'QCM API',
     description: 'API REST pour la gestion de questionnaires à choix multiples (QCM). Permet de gérer les questions, les réponses et les utilisateurs.'
   },
-  host: 'localhost:8000',
-  schemes: ['http'],
+  host: 'qcm-api-a108ec633b51.herokuapp.com',
+  schemes: ['https'],
   tags: [
     { name: 'Questions', description: 'Gestion des questions' },
     { name: 'Réponses', description: 'Gestion des réponses' },
