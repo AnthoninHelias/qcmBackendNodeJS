@@ -32,10 +32,10 @@ router.post('/create', (req, res) => {
                'application/json': {
                    schema: {
                        type: 'object',
-                       required: ['pseudo', 'mot_de_passe'],
+                       required: ['pseudo', 'motdepasse'],
                        properties: {
                            pseudo: { type: 'string', example: 'johndoe' },
-                           mot_de_passe: { type: 'string', example: 'motdepasse123' }
+                           motdepasse: { type: 'string', example: 'motdepasse123' }
                        }
                    }
                }
@@ -59,15 +59,14 @@ router.put('/update/:id', (req, res) => {
                    schema: {
                        type: 'object',
                        properties: {
-                           identifiant: { type: 'string', example: 'new.email@mail.com' },
-                           mot_de_passe: { type: 'string', example: 'nouveaumotdepasse' },
-                           pseudo: { type: 'string', example: 'newpseudo' }
+                           pseudo: { type: 'string', example: 'newpseudo' },
+                           motdepasse: { type: 'string', example: 'nouveaumotdepasse' }
                        }
                    }
                }
            }
        }
-       #swagger.responses[200] = { description: 'Utilisateur mis à jour', schema: { id: 1, identifiant: 'new.email@mail.com', pseudo: 'newpseudo' } }
+       #swagger.responses[200] = { description: 'Utilisateur mis à jour', schema: { id: 1, pseudo: 'newpseudo' } }
        #swagger.responses[400] = { description: 'Corps de la requête vide' }
        #swagger.responses[500] = { description: 'Erreur serveur' }
     */
@@ -93,10 +92,10 @@ router.post('/login', (req, res) => {
                'application/json': {
                    schema: {
                        type: 'object',
-                       required: ['pseudo', 'mot_de_passe'],
+                       required: ['pseudo', 'motdepasse'],
                        properties: {
                            pseudo: { type: 'string', example: 'johndoe' },
-                           mot_de_passe: { type: 'string', example: 'motdepasse123' }
+                           motdepasse: { type: 'string', example: 'motdepasse123' }
                        }
                    }
                }

@@ -25,16 +25,16 @@ createUtilisateur = async (request, response) => {
         });
     }
 
-    const { mot_de_passe, pseudo } = request.body;
+    const { motdepasse, pseudo } = request.body;
 
-    if (!pseudo || !mot_de_passe) {
+    if (!pseudo || !motdepasse) {
         return response.status(400).send({
             message: "Le pseudo et le mot de passe sont obligatoires."
         });
     }
 
     const utilisateur = new utilisateurModel.UtilisateurConstructor({
-        mot_de_passe,
+        mot_de_passe: motdepasse,
         pseudo
     });
 
@@ -58,7 +58,10 @@ updateUtilisateurById = async (request, response) => {
 
     utilisateurModel.updateUtilisateurById(
         request.params.id,
-        new utilisateurModel.UtilisateurConstructor(request.body),
+        new utilisateurModel.UtilisateurConstructor({
+            mot_de_passe: request.body.motdepasse,
+            pseudo: request.body.pseudo
+        }),
         (error, data) => {
             if (error)
                 response.status(500).send({
@@ -85,15 +88,15 @@ deleteUtilisateurById = (request, response) => {
 
 // Connexion d'un utilisateur
 loginUtilisateur = (request, response) => {
-    const { pseudo, mot_de_passe } = request.body;
+    const { pseudo, motdepasse } = request.body;
 
-    if (!pseudo || !mot_de_passe) {
+    if (!pseudo || !motdepasse) {
         return response.status(400).send({
             message: "Le pseudo et le mot de passe sont obligatoires."
         });
     }
 
-    utilisateurModel.loginUtilisateur(pseudo, mot_de_passe, (error, utilisateur) => {
+    utilisateurModel.loginUtilisateur(pseudo, motdepasse, (error, utilisateur) => {
         if (error) {
             return response.status(500).send({
                 message: error.message || "Erreur lors de la connexion."

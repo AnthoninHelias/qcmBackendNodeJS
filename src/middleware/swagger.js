@@ -2,14 +2,14 @@ const swaggerAutogen = require('swagger-autogen')();
 
 const doc = {
   info: {
-    title: 'My API',
-    description: 'API pour les questions et réponses'
+    title: 'QCM API',
+    description: 'API REST pour la gestion de questionnaires à choix multiples (QCM). Permet de gérer les questions, les réponses et les utilisateurs.'
   },
   host: 'localhost:8000',
   schemes: ['http'],
   tags: [
-    { name: 'Questions', description: 'Opérations sur les questions' },
-    { name: 'Réponses', description: 'Opérations sur les réponses' },
+    { name: 'Questions', description: 'Gestion des questions' },
+    { name: 'Réponses', description: 'Gestion des réponses' },
     { name: 'Utilisateurs', description: 'Gestion des utilisateurs' },
     { name: 'Authentification', description: 'Connexion des utilisateurs' }
   ]
