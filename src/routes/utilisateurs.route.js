@@ -17,7 +17,7 @@ router.get('/:id/:motdepasse', (req, res) => {
            description: 'Utilisateur trouvé',
            schema: { id: 1, pseudo: 'johndoe' }
        }
-       #swagger.responses[401] = { description: 'Identifiants incorrects' }
+       #swagger.responses[401] = { description: 'Mot de passe incorrect' }
        #swagger.responses[500] = { description: 'Erreur serveur' }
     */
     getUtilisateurById(req, res);
