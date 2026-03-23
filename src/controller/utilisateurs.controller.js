@@ -1,27 +1,19 @@
 const utilisateurModel = require('../models/utilisateurs.model');
 
-// Récupérer tous les utilisateurs
-getAllUtilisateurs = (request, response) => {
-    utilisateurModel.getAllUtilisateurs((error, data) => {
-        if (error)
-            response.status(500).send({
-                message: error.message || "Erreur lors de la récupération des utilisateurs."
-            });
-        else
-            response.send(data);
-    });
-};
-
-// Récupérer un utilisateur par son id
+// Récupérer un utilisateur par son id (mot de passe requis)
 getUtilisateurById = (request, response) => {
-    utilisateurModel.getUtilisateurById(request.params.id, (error, results) => {
+    const { id, motdepasse } = request.params;
+
+    utilisateurModel.getUtilisateurById(id, motdepasse, (error, utilisateur) => {
         if (error) {
-            response.status(500).send({
+            return response.status(500).send({
                 message: error.message || "Erreur lors de la récupération de l'utilisateur."
             });
-        } else {
-            response.send(results);
         }
+        if (!utilisateur) {
+            return response.status(401).send(false);
+        }
+        response.send(utilisateur);
     });
 };
 
@@ -33,18 +25,17 @@ createUtilisateur = async (request, response) => {
         });
     }
 
-    const { identifiant, mot_de_passe, pseudo } = request.body;
+    const { mot_de_passe, pseudo } = request.body;
 
-    if (!identifiant || !mot_de_passe) {
+    if (!pseudo || !mot_de_passe) {
         return response.status(400).send({
-            message: "L'identifiant et le mot de passe sont obligatoires."
+            message: "Le pseudo et le mot de passe sont obligatoires."
         });
     }
 
     const utilisateur = new utilisateurModel.UtilisateurConstructor({
-        identifiant,
         mot_de_passe,
-        pseudo: pseudo || null
+        pseudo
     });
 
     utilisateurModel.createUtilisateur(utilisateur, (error, data) => {
@@ -94,15 +85,15 @@ deleteUtilisateurById = (request, response) => {
 
 // Connexion d'un utilisateur
 loginUtilisateur = (request, response) => {
-    const { identifiant, mot_de_passe } = request.body;
+    const { pseudo, mot_de_passe } = request.body;
 
-    if (!identifiant || !mot_de_passe) {
+    if (!pseudo || !mot_de_passe) {
         return response.status(400).send({
-            message: "L'identifiant et le mot de passe sont obligatoires."
+            message: "Le pseudo et le mot de passe sont obligatoires."
         });
     }
 
-    utilisateurModel.loginUtilisateur(identifiant, mot_de_passe, (error, utilisateur) => {
+    utilisateurModel.loginUtilisateur(pseudo, mot_de_passe, (error, utilisateur) => {
         if (error) {
             return response.status(500).send({
                 message: error.message || "Erreur lors de la connexion."
@@ -130,7 +121,6 @@ loginByParams = (request, response) => {
 };
 
 module.exports = {
-    getAllUtilisateurs,
     getUtilisateurById,
     createUtilisateur,
     updateUtilisateurById,

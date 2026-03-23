@@ -1,104 +1,156 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "My API",
-    "description": "API pour les questions et réponses",
+    "title": "QCM API",
+    "description": "API REST pour la gestion de questionnaires à choix multiples (QCM). Permet de gérer les questions, les réponses et les utilisateurs.",
     "version": "1.0.0"
   },
   "host": "localhost:8000",
   "basePath": "/",
-  "schemes": [
-    "http"
-  ],
   "tags": [
     {
       "name": "Questions",
-      "description": "Opérations sur les questions"
+      "description": "Gestion des questions"
     },
     {
       "name": "Réponses",
-      "description": "Opérations sur les réponses"
+      "description": "Gestion des réponses"
+    },
+    {
+      "name": "Utilisateurs",
+      "description": "Gestion des utilisateurs"
+    },
+    {
+      "name": "Authentification",
+      "description": "Connexion des utilisateurs"
     }
+  ],
+  "schemes": [
+    "http"
   ],
   "paths": {
     "/questions/": {
       "get": {
-        "summary": "Renvoie toutes les questions",
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Récupérer toutes les questions",
         "description": "",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Liste de toutes les questions",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "intitule": {
+                    "type": "string",
+                    "example": "Quelle est la capitale de la France ?"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
             "description": "Internal Server Error"
           }
-        },
-        "tags": [
-          "Questions"]
+        }
       }
     },
     "/questions/{id}": {
       "get": {
-        "summary": "Renvoie une question par son id",
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Récupérer une question par son id",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "ID de la question"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "tags": [
-          "Questions"]
-      }
-    },
-    "/questions/create": {
-      "post": {
-        "summary": "Créer une question",
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
+            "description": "Question trouvée",
             "schema": {
               "type": "object",
               "properties": {
                 "id": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 },
                 "intitule": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Quelle est la capitale de la France ?"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Erreur serveur"
+          }
+        }
+      }
+    },
+    "/questions/create": {
+      "post": {
+        "tags": [
+          "Questions"
+        ],
+        "summary": "Créer une nouvelle question",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Question créée avec succès"
+          },
+          "400": {
+            "description": "Corps de la requête vide"
+          },
+          "500": {
+            "description": "Erreur serveur"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "intitule"
+                ],
+                "properties": {
+                  "intitule": {
+                    "type": "string",
+                    "example": "Quelle est la capitale de la France ?"
+                  }
                 }
               }
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "tags": [
-          "Questions"]
+        }
       }
     },
     "/questions/update/{id}": {
       "put": {
+        "tags": [
+          "Questions"
+        ],
         "summary": "Mettre à jour une question par son id",
         "description": "",
         "parameters": [
@@ -106,41 +158,47 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "any"
-                },
-                "intitule": {
-                  "example": "any"
-                }
-              }
-            }
+            "type": "integer",
+            "description": "ID de la question"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Question mise à jour avec succès"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Corps de la requête vide"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erreur serveur"
           }
         },
-        "tags": [
-          "Questions"]
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "intitule"
+                ],
+                "properties": {
+                  "intitule": {
+                    "type": "string",
+                    "example": "Quelle est la capitale de la Belgique ?"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/questions/delete/{id}": {
       "delete": {
+        "tags": [
+          "Questions"
+        ],
         "summary": "Supprimer une question par son id",
         "description": "",
         "parameters": [
@@ -148,43 +206,393 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "ID de la question"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Question supprimée avec succès"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erreur serveur"
           }
-        },
-        "tags": [
-          "Questions"]
+        }
       }
     },
     "/reponse/{id}": {
       "get": {
-        "summary": "Renvoie les réponses par l'id de la question",
+        "tags": [
+          "Réponses"
+        ],
+        "summary": "Récupérer les réponses d\\'une question par son id",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "description": "ID de la question"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Liste des réponses de la question",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "titre": {
+                    "type": "string",
+                    "example": "Paris"
+                  },
+                  "correct": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "question_id": {
+                    "type": "number",
+                    "example": 1
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erreur serveur"
+          }
+        }
+      }
+    },
+    "/utilisateurs/{id}/{motdepasse}": {
+      "get": {
+        "tags": [
+          "Utilisateurs"
+        ],
+        "summary": "Récupérer un utilisateur par son id (mot de passe requis)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID de l'utilisateur"
+          },
+          {
+            "name": "motdepasse",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Mot de passe de l'utilisateur"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Utilisateur trouvé",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "identifiant": {
+                  "type": "string",
+                  "example": "john.doe@mail.com"
+                },
+                "pseudo": {
+                  "type": "string",
+                  "example": "johndoe"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Identifiants incorrects"
+          },
+          "500": {
+            "description": "Erreur serveur"
+          }
+        }
+      }
+    },
+    "/utilisateurs/create": {
+      "post": {
+        "tags": [
+          "Utilisateurs"
+        ],
+        "summary": "Créer un nouvel utilisateur",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Utilisateur créé",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "identifiant": {
+                  "type": "string",
+                  "example": "john.doe@mail.com"
+                },
+                "pseudo": {
+                  "type": "string",
+                  "example": "johndoe"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Corps de la requête invalide"
+          },
+          "500": {
+            "description": "Erreur serveur"
           }
         },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "identifiant",
+                  "mot_de_passe"
+                ],
+                "properties": {
+                  "identifiant": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "john.doe@mail.com"
+                  },
+                  "mot_de_passe": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "motdepasse123"
+                  },
+                  "pseudo": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "nullable": true,
+                    "example": "johndoe"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/utilisateurs/update/{id}": {
+      "put": {
         "tags": [
-          "Réponses"]
+          "Utilisateurs"
+        ],
+        "summary": "Mettre à jour un utilisateur par son id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID de l'utilisateur"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Utilisateur mis à jour",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "identifiant": {
+                  "type": "string",
+                  "example": "new.email@mail.com"
+                },
+                "pseudo": {
+                  "type": "string",
+                  "example": "newpseudo"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Corps de la requête vide"
+          },
+          "500": {
+            "description": "Erreur serveur"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "identifiant": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "new.email@mail.com"
+                  },
+                  "mot_de_passe": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "nouveaumotdepasse"
+                  },
+                  "pseudo": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "nullable": true,
+                    "example": "newpseudo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/utilisateurs/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Utilisateurs"
+        ],
+        "summary": "Supprimer un utilisateur par son id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID de l'utilisateur"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Utilisateur supprimé avec succès"
+          },
+          "500": {
+            "description": "Erreur serveur"
+          }
+        }
+      }
+    },
+    "/utilisateurs/login": {
+      "post": {
+        "tags": [
+          "Utilisateurs"
+        ],
+        "summary": "Connexion d\\'un utilisateur",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Connexion réussie (true) ou échouée (false)",
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Identifiant ou mot de passe manquant"
+          },
+          "500": {
+            "description": "Erreur serveur"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "identifiant",
+                  "mot_de_passe"
+                ],
+                "properties": {
+                  "identifiant": {
+                    "type": "string",
+                    "example": "john.doe@mail.com"
+                  },
+                  "mot_de_passe": {
+                    "type": "string",
+                    "example": "motdepasse123"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/{pseudo}/{motdepasse}": {
+      "get": {
+        "tags": [
+          "Authentification"
+        ],
+        "summary": "Connexion via pseudo et mot de passe (paramètres URL)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "pseudo",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Pseudo de l'utilisateur"
+          },
+          {
+            "name": "motdepasse",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Mot de passe de l'utilisateur"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Connexion réussie (true) ou échouée (false)",
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Erreur serveur"
+          }
+        }
       }
     }
   }

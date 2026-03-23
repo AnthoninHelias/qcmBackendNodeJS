@@ -5,49 +5,48 @@ const SALT_ROUNDS = 10;
 
 const UtilisateurConstructor = function(utilisateur) {
     this.id = utilisateur.id;
-    this.identifiant = utilisateur.identifiant;
     this.mot_de_passe = utilisateur.mot_de_passe;
     this.pseudo = utilisateur.pseudo;
 };
 
-// Récupérer tous les utilisateurs (sans le mot de passe)
-getAllUtilisateurs = (result_bdd_request) => {
-    database.query(
-        "SELECT id, identifiant, pseudo FROM utilisateurs",
-        (error, response) => {
-            if (error) {
-                result_bdd_request(error);
-                return;
+// Récupérer un utilisateur par son id (mot de passe requis)
+getUtilisateurById = async (id, mot_de_passe, result_bdd_request) => {
+    try {
+        database.query(
+            "SELECT * FROM utilisateurs WHERE id = $1",
+            [id],
+            async (error, response) => {
+                if (error) {
+                    result_bdd_request(error);
+                    return;
+                }
+                if (response.rows.length === 0) {
+                    result_bdd_request(null, null);
+                    return;
+                }
+                const utilisateur = response.rows[0];
+                const match = await bcrypt.compare(mot_de_passe, utilisateur.mot_de_passe);
+                if (!match) {
+                    result_bdd_request(null, null);
+                    return;
+                }
+                result_bdd_request(null, { id: utilisateur.id, pseudo: utilisateur.pseudo });
             }
-            result_bdd_request(null, response);
-        }
-    );
-};
-
-// Récupérer un utilisateur par son id (sans le mot de passe)
-getUtilisateurById = (id, result_bdd_request) => {
-    database.query(
-        "SELECT id, identifiant, pseudo FROM utilisateurs WHERE id = $1",
-        [id],
-        (error, response) => {
-            if (error) {
-                result_bdd_request(error);
-                return;
-            }
-            result_bdd_request(null, response);
-        }
-    );
+        );
+    } catch (error) {
+        result_bdd_request(error);
+    }
 };
 
 // Créer un utilisateur (avec hachage du mot de passe)
 createUtilisateur = async (utilisateur, result_bdd_request) => {
     try {
-        const { identifiant, mot_de_passe, pseudo } = utilisateur;
+        const { mot_de_passe, pseudo } = utilisateur;
         const hashedPassword = await bcrypt.hash(mot_de_passe, SALT_ROUNDS);
 
         database.query(
-            "INSERT INTO utilisateurs (identifiant, mot_de_passe, pseudo) VALUES ($1, $2, $3) RETURNING id, identifiant, pseudo",
-            [identifiant, hashedPassword, pseudo || null],
+            "INSERT INTO utilisateurs (mot_de_passe, pseudo) VALUES ($1, $2) RETURNING id, pseudo",
+            [hashedPassword, pseudo || null],
             (error, response) => {
                 if (error) {
                     result_bdd_request(error);
@@ -64,18 +63,18 @@ createUtilisateur = async (utilisateur, result_bdd_request) => {
 // Mettre à jour un utilisateur
 updateUtilisateurById = async (id, utilisateur, result_bdd_request) => {
     try {
-        const { identifiant, mot_de_passe, pseudo } = utilisateur;
+        const { mot_de_passe, pseudo } = utilisateur;
 
         let query;
         let params;
 
         if (mot_de_passe) {
             const hashedPassword = await bcrypt.hash(mot_de_passe, SALT_ROUNDS);
-            query = "UPDATE utilisateurs SET identifiant = $1, mot_de_passe = $2, pseudo = $3 WHERE id = $4 RETURNING id, identifiant, pseudo";
-            params = [identifiant, hashedPassword, pseudo || null, id];
+            query = "UPDATE utilisateurs SET mot_de_passe = $1, pseudo = $2 WHERE id = $3 RETURNING id, pseudo";
+            params = [hashedPassword, pseudo || null, id];
         } else {
-            query = "UPDATE utilisateurs SET identifiant = $1, pseudo = $2 WHERE id = $3 RETURNING id, identifiant, pseudo";
-            params = [identifiant, pseudo || null, id];
+            query = "UPDATE utilisateurs SET pseudo = $1 WHERE id = $2 RETURNING id, pseudo";
+            params = [pseudo || null, id];
         }
 
         database.query(query, params, (error, response) => {
@@ -116,11 +115,11 @@ loginByPseudo = async (pseudo, mot_de_passe, result_bdd_request) => {
 };
 
 // Connexion d'un utilisateur
-loginUtilisateur = async (identifiant, mot_de_passe, result_bdd_request) => {
+loginUtilisateur = async (pseudo, mot_de_passe, result_bdd_request) => {
     try {
         database.query(
-            "SELECT * FROM utilisateurs WHERE identifiant = $1",
-            [identifiant],
+            "SELECT * FROM utilisateurs WHERE pseudo = $1",
+            [pseudo],
             async (error, response) => {
                 if (error) {
                     result_bdd_request(error);
@@ -132,7 +131,7 @@ loginUtilisateur = async (identifiant, mot_de_passe, result_bdd_request) => {
                 }
                 const utilisateur = response.rows[0];
                 const match = await bcrypt.compare(mot_de_passe, utilisateur.mot_de_passe);
-                result_bdd_request(null, match ? { id: utilisateur.id, identifiant: utilisateur.identifiant, pseudo: utilisateur.pseudo } : false);
+                result_bdd_request(null, match ? { id: utilisateur.id, pseudo: utilisateur.pseudo } : false);
             }
         );
     } catch (error) {
@@ -143,7 +142,7 @@ loginUtilisateur = async (identifiant, mot_de_passe, result_bdd_request) => {
 // Supprimer un utilisateur
 deleteUtilisateurById = (id, result_bdd_request) => {
     database.query(
-        "DELETE FROM utilisateurs WHERE id = $1 RETURNING id, identifiant, pseudo",
+        "DELETE FROM utilisateurs WHERE id = $1 RETURNING id, pseudo",
         [id],
         (error, response) => {
             if (error) {
@@ -157,7 +156,6 @@ deleteUtilisateurById = (id, result_bdd_request) => {
 
 module.exports = {
     UtilisateurConstructor,
-    getAllUtilisateurs,
     getUtilisateurById,
     createUtilisateur,
     updateUtilisateurById,

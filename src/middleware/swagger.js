@@ -3,9 +3,16 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
   info: {
     title: 'My API',
-    description: 'Description'
+    description: 'API pour les questions et réponses'
   },
-  host: 'localhost:8000'
+  host: 'localhost:8000',
+  schemes: ['http'],
+  tags: [
+    { name: 'Questions', description: 'Opérations sur les questions' },
+    { name: 'Réponses', description: 'Opérations sur les réponses' },
+    { name: 'Utilisateurs', description: 'Gestion des utilisateurs' },
+    { name: 'Authentification', description: 'Connexion des utilisateurs' }
+  ]
 };
 
 const outputFile = './swagger-output.json';
